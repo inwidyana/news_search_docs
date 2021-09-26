@@ -1,0 +1,84 @@
+openapi: "3.0.2"
+info:
+  title: "News Search API"
+  description: "Search for news from several different news outlet."
+  version: "1.0"
+  contact:
+    name: "I Gede Indra Widyana"
+    url: "https://github.com/inwidyana/news_scraper"
+    email: "indrawidyana@gmail.com"
+
+servers:
+- url: "http://localhost:8000/api"
+
+paths:
+  /search:
+    get:
+      tags:
+      - News
+      summary: "Get news from several different outlet that match the keyword."
+      description: "Pass a keyword to searh for news from several different outlet."
+      operationId: searchNews
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          description: "Keyword to search for."
+          required: false
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: "Page to scrap. Used for pagination."
+          required: false
+
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200'
+
+tags:
+  - name: News
+    description: "Get searched news"
+
+components:
+  schemas:
+    "200":
+      title: Successful response
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Article'
+    Article:
+      type: object
+      required:
+        - title
+        - source
+        - link
+        - imageLink
+      properties:
+        title:
+          type: string
+          description: Article title
+          example: Jokowi Sebut Pelaku UMKM Jadi Prioritas Vaksinasi biar Ekonomi Ngebut Lagi
+        source:
+          type: string
+          enum:
+          - detik
+          - cnbc
+          description: News outlet that publish the article
+          example: detik
+        link:
+          type: string
+          description: Link to the original article published by the outlet
+          example: https://finance.detik.com/berita-ekonomi-bisnis/d-5739494/teten-sebut-pelaku-umkm-jadi-prioritas-vaksinasi-biar-ekonomi-ngebut-lagi
+        imageLink:
+          type: string
+          description: Image thumbnail link
+          example: https://akcdn.detik.net.id/community/media/visual/2021/09/25/menteri-koperasi-dan-ukm-teten-masduki_43.jpeg?w=250&q=
